@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kerajaan Alam Melayu Interaktif (BM & BC - Tanpa Pinyin)</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f0f4f8; /* Light blue-gray background */
+        }
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-button.active {
+            background-color: #3b82f6; /* Blue-600 */
+            color: white;
+            font-weight: 600;
+        }
+        /* New rule for Chinese text within an active tab button */
+        .tab-button.active .chinese-text {
+            color: white; /* Change Chinese text to white when button is active */
+        }
+        .tab-button:not(.active):hover {
+            background-color: #dbeafe; /* Blue-100 */
+        }
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .content-section.active {
+            display: block;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .card {
+            background-color: white;
+            border-radius: 0.75rem; /* 12px */
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            padding: 1.5rem; /* 24px */
+            margin-bottom: 1rem; /* 16px */
+            transition: transform 0.2s ease;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+        }
+        .card h3 {
+            font-size: 1.25rem; /* 20px */
+            font-weight: 600;
+            color: #1e3a8a; /* Blue-800 */
+            margin-bottom: 0.5rem; /* 8px */
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 100;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeInModal 0.3s ease-out;
+        }
+        .modal-content {
+            background-color: #fefefe;
+            margin: 10% auto;
+            padding: 25px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 600px;
+            border-radius: 0.75rem;
+            position: relative;
+        }
+        .close-button {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .close-button:hover,
+        .close-button:focus {
+            color: black;
+            text-decoration: none;
+        }
+        @keyframes fadeInModal {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        .quiz-option:hover {
+            background-color: #e0e7ff; /* Indigo-100 */
+        }
+        .info-box {
+            background-color: #e0f2fe; /* Sky-100 */
+            border-left: 4px solid #0ea5e9; /* Sky-500 */
+            padding: 1rem;
+            margin-top: 0.5rem;
+            border-radius: 0.25rem;
+        }
+        .icon {
+            font-size: 1.5em;
+            margin-right: 0.5rem;
+        }
+        .chinese-text {
+            font-size: 0.85em; /* Slightly smaller */
+            color: #1f2937; /* Gray-800 - Darker for better contrast */
+            margin-left: 5px;
+            font-weight: normal; /* Ensure it's not bold if the BM part is */
+        }
+    </style>
+</head>
+<body class="antialiased text-gray-800">
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-4xl font-bold text-blue-700">
+                Terokai <span class="chinese-text">(探索)</span> Kerajaan Alam Melayu! <span class="chinese-text">(马来世界王朝)</span> 🇲🇾📜
+            </h1>
+            <p class="text-gray-600 mt-2">
+                Belajar sambil bermain <span class="chinese-text">(边玩边学)</span> mengenai sistem pemerintahan <span class="chinese-text">(政治体系)</span> dan ekonomi masyarakat <span class="chinese-text">(社会经济)</span> zaman dahulu <span class="chinese-text">(古代)</span>.
+            </p>
+        </header>
+
+        <nav class="flex flex-wrap justify-center gap-2 mb-8">
+            <button class="tab-button active py-2 px-4 rounded-lg shadow-md" onclick="showSection('pemerintahan')">👑 Sistem Pemerintahan <span class="chinese-text">(政治体系)</span></button>
+            <button class="tab-button py-2 px-4 rounded-lg shadow-md" onclick="showSection('ekonomi')">🌾 Kegiatan Ekonomi <span class="chinese-text">(经济活动)</span></button>
+            <button class="tab-button py-2 px-4 rounded-lg shadow-md" onclick="showSection('pelajaran')">💡 Apa Kita Belajar? <span class="chinese-text">(学到什么?)</span></button>
+            <button class="tab-button py-2 px-4 rounded-lg shadow-md" onclick="showSection('kuiz')">❓ Kuiz Ringkas <span class="chinese-text">(小测验)</span></button>
+        </nav>
+
+        <main>
+            <section id="pemerintahan" class="content-section active">
+                <h2 class="text-2xl font-semibold text-blue-600 mb-6 text-center">Sistem Pemerintahan <span class="chinese-text">(政治体系)</span> Kerajaan Alam Melayu</h2>
+                
+                <div class="card">
+                    <h3><span class="icon">👑</span>Raja: Ketua Tertinggi <span class="chinese-text">(最高领导)</span></h3>
+                    <p>Raja <span class="chinese-text">(国王)</span> ialah pemerintah tertinggi <span class="chinese-text">(最高统治者)</span> dalam kerajaan. Kedudukan baginda sangat dihormati <span class="chinese-text">(受尊敬)</span> dan dianggap suci <span class="chinese-text">(被认为是神圣的)</span>.</p>
+                    <button class="mt-3 bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg text-sm" onclick="showModal('modalRaja')">Info Lanjut <span class="chinese-text">(更多信息)</span> tentang Raja</button>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">👥</span>Pembesar: Pembantu Raja <span class="chinese-text">(国王助手)</span></h3>
+                    <p>Raja dibantu oleh golongan pembesar <span class="chinese-text">(贵族/大臣)</span> yang mempunyai tugas masing-masing <span class="chinese-text">(各自的职责)</span>. Mereka memastikan pentadbiran <span class="chinese-text">(行政管理)</span> berjalan lancar.</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4">
+                        <div class="p-4 bg-indigo-50 rounded-lg shadow">
+                            <h4 class="font-semibold text-indigo-700">Bendahara <span class="chinese-text">(宰相/财政大臣)</span></h4>
+                            <p class="text-sm text-gray-600">Ketua semua pembesar, penasihat utama <span class="chinese-text">(主要顾问)</span> raja, dan pemangku raja <span class="chinese-text">(摄政王)</span> jika raja gering <span class="chinese-text">(生病)</span> atau ke luar negara.</p>
+                        </div>
+                        <div class="p-4 bg-indigo-50 rounded-lg shadow">
+                            <h4 class="font-semibold text-indigo-700">Syahbandar <span class="chinese-text">(港务大臣)</span></h4>
+                            <p class="text-sm text-gray-600">Mengurus hal ehwal pelabuhan <span class="chinese-text">(港口事务)</span>, perdagangan, dan kutipan cukai <span class="chinese-text">(税收)</span> di pelabuhan.</p>
+                        </div>
+                        <div class="p-4 bg-indigo-50 rounded-lg shadow">
+                            <h4 class="font-semibold text-indigo-700">Laksamana <span class="chinese-text">(海军统帅)</span></h4>
+                            <p class="text-sm text-gray-600">Ketua angkatan laut <span class="chinese-text">(海军)</span>, menjaga keselamatan perairan <span class="chinese-text">(水域安全)</span> kerajaan.</p>
+                        </div>
+                        <div class="p-4 bg-indigo-50 rounded-lg shadow">
+                            <h4 class="font-semibold text-indigo-700">Temenggung <span class="chinese-text">(内政大臣/警察总长)</span></h4>
+                            <p class="text-sm text-gray-600">Menjaga keamanan dan ketenteraman <span class="chinese-text">(和平与秩序)</span> di darat, serta menguatkuasakan undang-undang <span class="chinese-text">(执法)</span>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3><span class="icon">📜</span>Undang-undang <span class="chinese-text">(法律)</span></h3>
+                    <p>Setiap kerajaan mempunyai undang-undang (bertulis <span class="chinese-text">(成文法)</span> atau adat <span class="chinese-text">(习惯法)</span>) untuk memastikan keadilan <span class="chinese-text">(公正)</span> dan ketenteraman masyarakat <span class="chinese-text">(社会秩序)</span>. Contoh undang-undang bertulis ialah Hukum Kanun Melaka <span class="chinese-text">(马六甲法典)</span>.</p>
+                </div>
+            </section>
+
+            <section id="ekonomi" class="content-section">
+                <h2 class="text-2xl font-semibold text-green-600 mb-6 text-center">Kegiatan Ekonomi Masyarakat <span class="chinese-text">(社会经济活动)</span></h2>
+                <div class="grid md:grid-cols-2 gap-6">
+                    <div class="card">
+                        <h3><span class="icon">🌾</span>Pertanian <span class="chinese-text">(农业)</span></h3>
+                        <p>Tanah yang subur <span class="chinese-text">(肥沃)</span> membolehkan penanaman <span class="chinese-text">(种植)</span> padi <span class="chinese-text">(稻米)</span>, sayur-sayuran <span class="chinese-text">(蔬菜)</span>, buah-buahan <span class="chinese-text">(水果)</span>, dan rempah ratus <span class="chinese-text">(香料)</span> seperti lada hitam <span class="chinese-text">(黑胡椒)</span>, cengkih <span class="chinese-text">(丁香)</span>, dan buah pala <span class="chinese-text">(豆蔻)</span>.</p>
+                        <button class="mt-3 bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded-lg text-sm" onclick="showModal('modalRempah')">Contoh Rempah <span class="chinese-text">(香料示例)</span></button>
+                    </div>
+                    <div class="card">
+                        <h3><span class="icon">🚢</span>Perdagangan <span class="chinese-text">(贸易)</span></h3>
+                        <p>Pelabuhan <span class="chinese-text">(港口)</span> menjadi pusat perdagangan penting <span class="chinese-text">(贸易中心)</span> (entrepot <span class="chinese-text">(转口贸易港)</span>) yang dikunjungi pedagang <span class="chinese-text">(商人)</span> dari China, India, Arab. Barang dagangan utama <span class="chinese-text">(主要商品)</span>: rempah, hasil hutan <span class="chinese-text">(森林产品)</span>, hasil laut <span class="chinese-text">(海产品)</span>, dan hasil lombong <span class="chinese-text">(矿产品)</span>.</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="icon">🌳</span>Hasil Hutan <span class="chinese-text">(森林产品)</span> & <span class="icon">🌊</span>Laut <span class="chinese-text">(海产品)</span></h3>
+                        <p>Mengutip <span class="chinese-text">(收集)</span> hasil hutan seperti rotan <span class="chinese-text">(藤)</span>, damar <span class="chinese-text">(树脂)</span>, kapur barus <span class="chinese-text">(樟脑)</span>. Menangkap ikan <span class="chinese-text">(捕鱼)</span> dan mengutip hasil laut seperti mutiara <span class="chinese-text">(珍珠)</span> dan gamat <span class="chinese-text">(海参)</span>.</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="icon">⛏️</span>Perlombongan <span class="chinese-text">(采矿业)</span></h3>
+                        <p>Melombong <span class="chinese-text">(开采)</span> emas <span class="chinese-text">(黄金)</span> dan bijih timah <span class="chinese-text">(锡矿)</span> yang menjadi sumber kekayaan <span class="chinese-text">(财富来源)</span> kerajaan.</p>
+                    </div>
+                    <div class="card">
+                        <h3><span class="icon">🛠️</span>Pembuatan <span class="chinese-text">(制造业)</span></h3>
+                        <p>Masyarakat mahir membuat <span class="chinese-text">(擅长制作)</span> peralatan <span class="chinese-text">(工具)</span>, senjata <span class="chinese-text">(武器)</span>, perahu <span class="chinese-text">(船)</span>, tembikar <span class="chinese-text">(陶器)</span>, dan menenun kain <span class="chinese-text">(织布)</span> seperti songket <span class="chinese-text">(宋吉锦缎)</span>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="pelajaran" class="content-section">
+                <h2 class="text-2xl font-semibold text-purple-600 mb-6 text-center">Apa yang Boleh Kita Pelajari? <span class="chinese-text">(我们能学到什么?)</span></h2>
+                <div class="space-y-4">
+                    <div class="card">
+                        <p><span class="icon">💡</span><strong>Pemimpin Bijaksana <span class="chinese-text">(明智的领袖)</span>:</strong> Pentingnya pemimpin yang adil <span class="chinese-text">(公正)</span> dan bijak <span class="chinese-text">(明智)</span> untuk kemajuan negara <span class="chinese-text">(国家进步)</span>.</p>
+                    </div>
+                    <div class="card">
+                        <p><span class="icon">💖</span><strong>Menghargai Warisan <span class="chinese-text">(珍惜遗产)</span>:</strong> Kita patut bangga dan memelihara <span class="chinese-text">(保护)</span> warisan sejarah bangsa <span class="chinese-text">(民族历史遗产)</span>.</p>
+                    </div>
+                    <div class="card">
+                        <p><span class="icon">🌟</span><strong>Iktibar Kegemilangan <span class="chinese-text">(辉煌的教训)</span>:</strong> Kejayaan lampau <span class="chinese-text">(过去的成功)</span> menjadi inspirasi <span class="chinese-text">(灵感)</span> untuk terus maju <span class="chinese-text">(继续前进)</span>.</p>
+                    </div>
+                    <div class="card">
+                        <p><span class="icon">🤝</span><strong>Hidup Berorganisasi <span class="chinese-text">(有组织的生活)</span>:</strong> Kerjasama <span class="chinese-text">(合作)</span> dan sistem yang teratur <span class="chinese-text">(有序的系统)</span> membawa kemakmuran <span class="chinese-text">(繁荣)</span>.</p>
+                    </div>
+                     <div class="card">
+                        <p><span class="icon">🛡️</span><strong>Kepatuhan kepada Pemimpin & Undang-undang <span class="chinese-text">(遵守领袖与法律)</span>:</strong> Menjamin kestabilan dan keharmonian <span class="chinese-text">(保障稳定与和谐)</span>.</p>
+                    </div>
+                     <div class="card">
+                        <p><span class="icon">🌍</span><strong>Kerjasama & Toleransi <span class="chinese-text">(合作与宽容)</span>:</strong> Sikap terbuka <span class="chinese-text">(开放的态度)</span> membawa kemajuan dan persefahaman <span class="chinese-text">(进步与理解)</span>.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section id="kuiz" class="content-section">
+                <h2 class="text-2xl font-semibold text-red-600 mb-6 text-center">Jom Uji Minda! <span class="chinese-text">(来测试一下吧!)</span> 🧠</h2>
+                <div id="quiz-container" class="space-y-6">
+                    </div>
+                <div id="quiz-result" class="mt-6 text-center font-semibold text-lg"></div>
+                <div class="text-center mt-4">
+                    <button id="submit-quiz-button" class="bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-lg" onclick="submitQuiz()">Hantar Jawapan <span class="chinese-text">(提交答案)</span></button>
+                    <button id="retry-quiz-button" class="hidden bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-6 rounded-lg ml-2" onclick="retryQuiz()">Cuba Lagi <span class="chinese-text">(再试一次)</span></button>
+                </div>
+            </section>
+        </main>
+
+        <footer class="text-center mt-12 py-4 border-t border-gray-300">
+            <p class="text-sm text-gray-500">&copy; 2025 Aplikasi Pembelajaran Sejarah <span class="chinese-text">(历史学习应用)</span>. Dibuat dengan ❤️ <span class="chinese-text">(用❤️制作)</span>.</p>
+        </footer>
+    </div>
+
+    <div id="modalRaja" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('modalRaja')">&times;</span>
+            <h3 class="text-xl font-semibold text-blue-700 mb-3">Peranan dan Tanggungjawab Raja <span class="chinese-text">(国王的职责)</span></h3>
+            <ul class="list-disc list-inside text-gray-700 space-y-1">
+                <li>Menjaga keamanan <span class="chinese-text">(和平)</span> dan kedaulatan <span class="chinese-text">(主权)</span> kerajaan.</li>
+                <li>Memastikan kebajikan rakyat <span class="chinese-text">(人民福利)</span> terpelihara <span class="chinese-text">(得到保障)</span>.</li>
+                <li>Mengetuai angkatan tentera <span class="chinese-text">(领导军队)</span>.</li>
+                <li>Menjalinkan hubungan diplomatik <span class="chinese-text">(外交关系)</span> dengan kerajaan luar <span class="chinese-text">(外国政府)</span>.</li>
+                <li>Menjadi ketua hakim <span class="chinese-text">(首席法官)</span> dan lambang perpaduan <span class="chinese-text">(团结的象征)</span>.</li>
+                <li>Konsep penting <span class="chinese-text">(重要概念)</span>: <em>devaraja</em> <span class="chinese-text">(神王 - 国王即神)</span> dan <em>khalifatullah fil-ardh</em> <span class="chinese-text">(哈里发 - 伊斯兰教传入后安拉在世间的代表)</span>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="modalRempah" class="modal">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeModal('modalRempah')">&times;</span>
+            <h3 class="text-xl font-semibold text-green-700 mb-3">Contoh Rempah Ratus Alam Melayu <span class="chinese-text">(马来世界香料示例)</span></h3>
+            <p class="text-gray-700">Rempah ratus sangat bernilai <span class="chinese-text">(有价值)</span> dan menjadi tarikan utama <span class="chinese-text">(主要吸引力)</span> pedagang asing <span class="chinese-text">(外国商人)</span>.</p>
+            <ul class="list-disc list-inside text-gray-700 space-y-1 mt-2">
+                <li><strong>Lada Hitam <span class="chinese-text">(黑胡椒)</span>:</strong> Dikenali sebagai "raja rempah" <span class="chinese-text">(香料之王)</span>.</li>
+                <li><strong>Cengkih <span class="chinese-text">(丁香)</span>:</strong> Berasal dari Kepulauan Maluku <span class="chinese-text">(来自马鲁古群岛)</span>.</li>
+                <li><strong>Buah Pala <span class="chinese-text">(豆蔻)</span>:</strong> Juga dari Kepulauan Maluku, biji dan salut bijinya (mace) <span class="chinese-text">(种子和肉豆蔻皮)</span> digunakan.</li>
+                <li><strong>Kayu Manis <span class="chinese-text">(肉桂)</span>:</strong> Kulit pokok yang dikeringkan <span class="chinese-text">(干燥的树皮)</span>.</li>
+                <li><strong>Bunga Lawang <span class="chinese-text">(八角)</span>:</strong> Berbentuk bintang <span class="chinese-text">(星形)</span>, rasa seperti jintan manis <span class="chinese-text">(味道像茴香)</span>.</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        // Fungsi untuk menukar bahagian (tab)
+        function showSection(sectionId) {
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+
+            const buttons = document.querySelectorAll('.tab-button');
+            buttons.forEach(button => {
+                button.classList.remove('active');
+            });
+            // Check if event.currentTarget exists (it might not if called programmatically)
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            } else {
+                // Fallback for programmatic calls, e.g., on DOMContentLoaded
+                // Find the button corresponding to sectionId and activate it
+                buttons.forEach(button => {
+                    if (button.getAttribute('onclick').includes(`'${sectionId}'`)) {
+                        button.classList.add('active');
+                    }
+                });
+            }
+
+
+            // Jika tab kuiz dipilih, jana soalan kuiz
+            if (sectionId === 'kuiz') {
+                generateQuiz();
+            }
+        }
+
+        // Fungsi untuk memaparkan modal
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        // Fungsi untuk menutup modal
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        // Tutup modal jika pengguna klik di luar kandungan modal
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target == modal) {
+                    modal.style.display = "none";
+                }
+            });
+        }
+
+        // Data Kuiz
+        const quizData = [
+            {
+                question: "Siapakah ketua tertinggi <span class=\"chinese-text\">(最高领导)</span> dalam sistem pemerintahan beraja di Alam Melayu?",
+                options: [
+                    "Pembesar <span class=\"chinese-text\">(大臣)</span>", 
+                    "Raja <span class=\"chinese-text\">(国王)</span>", 
+                    "Syahbandar <span class=\"chinese-text\">(港务大臣)</span>", 
+                    "Nelayan <span class=\"chinese-text\">(渔夫)</span>"
+                ],
+                answer: "Raja <span class=\"chinese-text\">(国王)</span>"
+            },
+            {
+                question: "Apakah peranan utama <span class=\"chinese-text\">(主要职责)</span> seorang Laksamana <span class=\"chinese-text\">(海军统帅)</span>?",
+                options: [
+                    "Mengurus pelabuhan <span class=\"chinese-text\">(管理港口)</span>", 
+                    "Menasihati raja <span class=\"chinese-text\">(劝谏国王)</span>", 
+                    "Ketua angkatan laut <span class=\"chinese-text\">(海军首领)</span>", 
+                    "Mengutip cukai <span class=\"chinese-text\">(收税)</span>"
+                ],
+                answer: "Ketua angkatan laut <span class=\"chinese-text\">(海军首领)</span>"
+            },
+            {
+                question: "Kegiatan ekonomi utama <span class=\"chinese-text\">(主要经济活动)</span> yang berkaitan dengan kesuburan tanah <span class=\"chinese-text\">(土地肥沃)</span> ialah...",
+                options: [
+                    "Perlombongan <span class=\"chinese-text\">(采矿业)</span>", 
+                    "Perdagangan <span class=\"chinese-text\">(贸易)</span>", 
+                    "Pertanian <span class=\"chinese-text\">(农业)</span>", 
+                    "Pembuatan <span class=\"chinese-text\">(制造业)</span>"
+                ],
+                answer: "Pertanian <span class=\"chinese-text\">(农业)</span>"
+            },
+            {
+                question: "Pelabuhan tempat persinggahan kapal dagang <span class=\"chinese-text\">(商船停靠港)</span> dikenali sebagai...",
+                options: [
+                    "Pasar raya <span class=\"chinese-text\">(超市)</span>", 
+                    "Entrepot <span class=\"chinese-text\">(转口贸易港)</span>", 
+                    "Gudang <span class=\"chinese-text\">(仓库)</span>", 
+                    "Terminal <span class=\"chinese-text\">(码头)</span>"
+                ],
+                answer: "Entrepot <span class=\"chinese-text\">(转口贸易港)</span>"
+            },
+            {
+                question: "Antara berikut, yang manakah BUKAN hasil hutan <span class=\"chinese-text\">(森林产品)</span> Alam Melayu?",
+                options: [
+                    "Rotan <span class=\"chinese-text\">(藤)</span>", 
+                    "Damar <span class=\"chinese-text\">(树脂)</span>", 
+                    "Bijih Timah <span class=\"chinese-text\">(锡矿)</span>", 
+                    "Kapur Barus <span class=\"chinese-text\">(樟脑)</span>"
+                ],
+                answer: "Bijih Timah <span class=\"chinese-text\">(锡矿)</span>"
+            }
+        ];
+
+        // Fungsi untuk menjana soalan kuiz
+        function generateQuiz() {
+            const quizContainer = document.getElementById('quiz-container');
+            quizContainer.innerHTML = ''; // Kosongkan soalan lama
+            quizData.forEach((item, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('card', 'p-5');
+                
+                const questionTitle = document.createElement('h4');
+                questionTitle.classList.add('font-semibold', 'mb-3', 'text-gray-700');
+                questionTitle.innerHTML = `Soalan ${index + 1} <span class="chinese-text">(问题 ${index + 1})</span>: ${item.question}`; // Use innerHTML for spans
+                questionDiv.appendChild(questionTitle);
+
+                const optionsDiv = document.createElement('div');
+                optionsDiv.classList.add('space-y-2');
+                
+                const shuffledOptions = [...item.options].sort(() => Math.random() - 0.5);
+
+                shuffledOptions.forEach(option => {
+                    const label = document.createElement('label');
+                    label.classList.add('block', 'p-3', 'rounded-lg', 'border', 'border-gray-300', 'cursor-pointer', 'quiz-option');
+                    
+                    const input = document.createElement('input');
+                    input.type = 'radio';
+                    input.name = `question${index}`;
+                    input.value = option; // Store the option value (which might include HTML)
+                    input.classList.add('mr-2', 'accent-red-500');
+                    
+                    label.appendChild(input);
+                    // Use innerHTML for options as they now contain spans
+                    const optionTextNode = document.createElement('span');
+                    optionTextNode.innerHTML = option;
+                    label.appendChild(optionTextNode);
+
+                    optionsDiv.appendChild(label);
+                });
+                questionDiv.appendChild(optionsDiv);
+                quizContainer.appendChild(questionDiv);
+            });
+            document.getElementById('quiz-result').textContent = '';
+            document.getElementById('submit-quiz-button').classList.remove('hidden');
+            document.getElementById('retry-quiz-button').classList.add('hidden');
+        }
+
+        // Fungsi untuk menghantar jawapan kuiz
+        function submitQuiz() {
+            let score = 0;
+            quizData.forEach((item, index) => {
+                const selectedOptionInput = document.querySelector(`input[name="question${index}"]:checked`);
+                if (selectedOptionInput && selectedOptionInput.value === item.answer) {
+                    score++;
+                }
+            });
+            const resultDiv = document.getElementById('quiz-result');
+            let resultMessage = `Anda mendapat ${score} daripada ${quizData.length} soalan dengan betul! <span class="chinese-text">(你答对了 ${quizData.length} 题中的 ${score} 题!)</span>`;
+            
+            if (score === quizData.length) {
+                resultMessage += " Tahniah, hebat! <span class=\"chinese-text\">(恭喜，太棒了! 🎉)</span>";
+                resultDiv.className = 'mt-6 text-center font-semibold text-lg text-green-600';
+            } else if (score >= quizData.length / 2) {
+                resultMessage += " Bagus, teruskan usaha! <span class=\"chinese-text\">(很好，继续努力! 👍)</span>";
+                resultDiv.className = 'mt-6 text-center font-semibold text-lg text-yellow-600';
+            } else {
+                resultMessage += " Jangan putus asa, cuba lagi! <span class=\"chinese-text\">(别灰心，再试试! 😊)</span>";
+                resultDiv.className = 'mt-6 text-center font-semibold text-lg text-red-600';
+            }
+            resultDiv.innerHTML = resultMessage; // Use innerHTML for spans in result message
+
+            document.getElementById('submit-quiz-button').classList.add('hidden');
+            document.getElementById('retry-quiz-button').classList.remove('hidden');
+        }
+        
+        // Fungsi untuk cuba lagi kuiz
+        function retryQuiz() {
+            generateQuiz();
+        }
+
+        // Papar bahagian pertama secara lalai
+        document.addEventListener('DOMContentLoaded', () => {
+            showSection('pemerintahan');
+        });
+    </script>
+</body>
+</html>
